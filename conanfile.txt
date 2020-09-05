@@ -1,0 +1,17 @@
+[requires]
+sdl2/2.0.12@bincrafters/stable
+
+[generators]
+cmake
+
+[options]
+sdl2:alsa=False
+sdl2:jack=False
+sdl2:nas=False
+sdl2:pulse=False
+sdl2:shared=True
+sdl2:wayland=True
+
+[imports]
+bin, *.dll -> ./bin
+lib, *.dylib -> ./bin

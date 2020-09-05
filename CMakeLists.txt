@@ -12,10 +12,24 @@ message(NOTICE "----------------------")
 message(NOTICE "Source Dir: ${PROJECT_SOURCE_DIR}")
 message(NOTICE "Binary Dir: ${PROJECT_BINARY_DIR}")
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake)
+# Download the CMake wrapper for the Conan C and C++ package manager
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+    file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.15/conan.cmake" "${CMAKE_BINARY_DIR}/conan.cmake")
+endif()
+include(${CMAKE_BINARY_DIR}/conan.cmake)
+conan_check(VERSION 1.28.1 REQUIRED)
 
+# Run Conan and compile dependencies
+conan_cmake_run(
+    CONANFILE conanfile.txt
+    BASIC_SETUP
+    CMAKE_TARGETS
+    BUILD missing
+)
+
+# Find Vulkan package
 find_package(Vulkan REQUIRED)
-find_package(SDL2 REQUIRED)
 
 # Require a C++17 compatible compiler
 set(CMAKE_CXX_STANDARD 17)
@@ -28,16 +42,24 @@ else()
   add_compile_options(-Wall -Wpedantic -Werror)
 endif()
 
+# Configure header file
 configure_file(${PROJECT_SOURCE_DIR}/Include/Config.hpp.in Config.hpp @ONLY)
 
-set(SOURCE_FILES Source/Main.cpp Source/Application.cpp)
-set(INCLUDE_FILES Include/Application.hpp)
+set(
+    SOURCE_FILES
+    Source/Main.cpp
+    Source/Application.cpp
+)
+
+set(
+    INCLUDE_FILES
+    Include/Application.hpp
+)
 
 add_executable(Vulkan-Engine ${SOURCE_FILES} ${INCLUDE_FILES})
 
 target_link_libraries(Vulkan-Engine Vulkan::Vulkan)
-target_link_libraries(Vulkan-Engine SDL2::SDL2-static)
+target_link_libraries(Vulkan-Engine CONAN_PKG::sdl2)
 
 target_include_directories(Vulkan-Engine PRIVATE ${PROJECT_BINARY_DIR})
 target_include_directories(Vulkan-Engine PRIVATE ${CMAKE_SOURCE_DIR}/Include)
-target_include_directories(Vulkan-Engine PRIVATE ${Vulkan_INCLUDE_DIRS})
