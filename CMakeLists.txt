@@ -20,7 +20,7 @@ endif()
 include(${CMAKE_BINARY_DIR}/conan.cmake)
 conan_check(VERSION 1.28.1 REQUIRED)
 
-# Run Conan and compile dependencies
+# Run Conan and retrieve dependencies
 conan_cmake_run(
     CONANFILE conanfile.txt
     BASIC_SETUP
@@ -34,13 +34,6 @@ find_package(Vulkan REQUIRED)
 # Require a C++17 compatible compiler
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Set compile flags
-if(MSVC)
-  add_compile_options(/W4 /WX)
-else()
-  add_compile_options(-Wall -Wpedantic -Werror)
-endif()
 
 # Configure header file
 configure_file(${PROJECT_SOURCE_DIR}/Include/Config.hpp.in Config.hpp @ONLY)
@@ -58,8 +51,16 @@ set(
 
 add_executable(Vulkan-Engine ${SOURCE_FILES} ${INCLUDE_FILES})
 
-target_link_libraries(Vulkan-Engine Vulkan::Vulkan)
-target_link_libraries(Vulkan-Engine CONAN_PKG::sdl2)
+target_include_directories(
+    Vulkan-Engine
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/Include
+    ${PROJECT_BINARY_DIR}
+)
 
-target_include_directories(Vulkan-Engine PRIVATE ${PROJECT_BINARY_DIR})
-target_include_directories(Vulkan-Engine PRIVATE ${CMAKE_SOURCE_DIR}/Include)
+target_link_libraries(
+    Vulkan-Engine
+    PUBLIC
+    CONAN_PKG::sdl2
+    Vulkan::Vulkan
+)
