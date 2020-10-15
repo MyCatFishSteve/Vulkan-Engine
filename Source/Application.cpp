@@ -41,7 +41,7 @@ bool Application::isDeviceSuitable(const vk::PhysicalDevice& phys_dev) const
 
   // Delete items from unsupported extensions if they are supported
   for (const auto& pdev_ext : pdev_exts)
-    unsupported_extensions.erase(std::string(pdev_ext.extensionName));
+    unsupported_extensions.erase(std::string(pdev_ext.extensionName.data()));
 
   // Check if there are any unsupported extensions remaining
   if (!unsupported_extensions.empty())
