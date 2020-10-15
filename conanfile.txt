@@ -5,7 +5,7 @@ sdl2/2.0.12@bincrafters/stable
 cmake
 
 [options]
-sdl2:shared=True
+sdl2:shared=False
 
 [imports]
 bin, *.dll -> ./bin
