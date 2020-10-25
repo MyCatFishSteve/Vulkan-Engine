@@ -18,7 +18,7 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
     file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.15/conan.cmake" "${CMAKE_BINARY_DIR}/conan.cmake")
 endif()
 include(${CMAKE_BINARY_DIR}/conan.cmake)
-conan_check(VERSION 1.28.1 REQUIRED)
+conan_check(VERSION 1.30.1 REQUIRED)
 
 # Run Conan and retrieve dependencies
 conan_cmake_run(
