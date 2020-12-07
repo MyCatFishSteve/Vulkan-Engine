@@ -54,7 +54,7 @@ BreakConstructorInitializers: AfterColon
 BreakInheritanceList:         AfterColon
 BreakStringLiterals:          true
 
-ColumnLimit:       100
+ColumnLimit:       120
 CommentPragmas:    '^ IWYU pragma:'
 CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
@@ -133,7 +133,7 @@ SpaceBeforeSquareBrackets:         false
 StatementMacros:
   - Q_UNUSED
   - QT_REQUIRE_VERSION
-TabWidth: 2
+TabWidth: 4
 UseCRLF:  false
 UseTab:   Never
 ...
